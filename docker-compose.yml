@@ -24,7 +24,9 @@ services:
     command:
       - --config.file=/etc/prometheus/prometheus.yml
     volumes:
-      - ./docker/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./docker/prometheus:/etc/prometheus
+      # - ./docker/prometheus.yml:/etc/prometheus/prometheus.yml
+      # - ./docker/prometheus/rules:/etc/prometheus/rules
     links:
       - webservice
 

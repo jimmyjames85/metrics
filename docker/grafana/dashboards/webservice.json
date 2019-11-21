@@ -15,6 +15,7 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 0,
+  "id": 1,
   "links": [],
   "panels": [
     {
@@ -23,7 +24,7 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": "Prometheus",
-      "fill": 1,
+      "fill": 0,
       "fillGradient": 0,
       "gridPos": {
         "h": 9,
@@ -51,17 +52,31 @@
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
-      "seriesOverrides": [],
+      "seriesOverrides": [
+        {
+          "alias": "/alert/",
+          "color": "#F2495C",
+          "fill": 7
+        }
+      ],
       "spaceLength": 10,
       "stack": false,
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(rate(webservice_http_request_duration_seconds_count{code!~\"5.*\"}[1m])) / sum(rate(webservice_http_request_duration_seconds_count{}[1m])) ",
+          "expr": "webservice_error_rate_1m",
+          "legendFormat": "1m",
           "refId": "A"
         },
         {
-          "expr": "sum(rate(webservice_http_request_duration_seconds_count{code!~\"5.*\"}[5m])) / sum(rate(webservice_http_request_duration_seconds_count{}[5m])) ",
+          "expr": "webservice_error_rate_5m",
+          "legendFormat": "5m",
+          "refId": "C"
+        },
+        {
+          "expr": "(webservice_error_rate_1m > 0.05)\nand\n(webservice_error_rate_5m > 0.05)",
+          "hide": false,
+          "legendFormat": "alert",
           "refId": "B"
         }
       ],
@@ -69,10 +84,10 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Panel Title",
+      "title": "webservice_error_rate",
       "tooltip": {
-        "shared": true,
-        "sort": 0,
+        "shared": false,
+        "sort": 2,
         "value_type": "individual"
       },
       "type": "graph",
@@ -133,7 +148,7 @@
     ]
   },
   "timezone": "",
-  "title": "jimbo",
+  "title": "webservice",
   "uid": "TCD9fHbZk",
-  "version": 2
+  "version": 1
 }

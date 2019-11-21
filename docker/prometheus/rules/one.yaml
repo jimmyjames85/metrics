@@ -1,0 +1,8 @@
+groups:
+  - name: recording
+    interval: 1s
+    rules:
+      - record: webservice_error_rate_1m
+        expr: 1 - sum(rate(webservice_http_request_duration_seconds_count{code!~"5.*"}[1m])) / sum(rate(webservice_http_request_duration_seconds_count{}[1m]))
+      - record: webservice_error_rate_5m
+        expr: 1 - sum(rate(webservice_http_request_duration_seconds_count{code!~"5.*"}[5m])) / sum(rate(webservice_http_request_duration_seconds_count{}[5m]))

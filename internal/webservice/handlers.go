@@ -9,24 +9,19 @@ import (
 
 // rootHandler will return a list of available endpoints
 func (s *Server) rootHandler(w http.ResponseWriter, r *http.Request) {
-
 	bw := bufio.NewWriter(w)
-
 	bw.WriteString("\n\nAvailable Service Endpoints\n===========================\n\n")
 	for _, ep := range s.httpEndpoints {
 		fmt.Fprintf(bw, "curl -X %s localhost:%d%s\n", ep.Method, s.port, ep.Path)
 	}
-
 	bw.Flush()
 }
 
 func (s *Server) codeHandler(code int) http.HandlerFunc {
 	if code < 100 || code > 599 {
-		// See https://golang.org/src/net/http/server.go#L1078
-		// panic before invalid call to WriteHeader
+		// panic before invalid call to WriteHeader (See https://golang.org/src/net/http/server.go#L1078)
 		panic(fmt.Sprintf("invalid WriteHeader code %v", code))
 	}
-
 	return func(w http.ResponseWriter, r *http.Request) {
 		err := delayResponse(r)
 		if err != nil {
