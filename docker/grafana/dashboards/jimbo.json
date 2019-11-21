@@ -15,7 +15,6 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 0,
-  "id": 1,
   "links": [],
   "panels": [
     {
@@ -58,8 +57,12 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "webservice_http_api_requests_total{}",
+          "expr": "sum(rate(webservice_http_request_duration_seconds_count{code!~\"5.*\"}[1m])) / sum(rate(webservice_http_request_duration_seconds_count{}[1m])) ",
           "refId": "A"
+        },
+        {
+          "expr": "sum(rate(webservice_http_request_duration_seconds_count{code!~\"5.*\"}[5m])) / sum(rate(webservice_http_request_duration_seconds_count{}[5m])) ",
+          "refId": "B"
         }
       ],
       "thresholds": [],
@@ -104,6 +107,7 @@
       }
     }
   ],
+  "refresh": "",
   "schemaVersion": 20,
   "style": "dark",
   "tags": [],
@@ -111,7 +115,7 @@
     "list": []
   },
   "time": {
-    "from": "now-6h",
+    "from": "now-15m",
     "to": "now"
   },
   "timepicker": {
@@ -131,5 +135,5 @@
   "timezone": "",
   "title": "jimbo",
   "uid": "TCD9fHbZk",
-  "version": 1
+  "version": 2
 }
