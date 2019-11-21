@@ -25,8 +25,6 @@ services:
       - --config.file=/etc/prometheus/prometheus.yml
     volumes:
       - ./docker/prometheus:/etc/prometheus
-      # - ./docker/prometheus.yml:/etc/prometheus/prometheus.yml
-      # - ./docker/prometheus/rules:/etc/prometheus/rules
     links:
       - webservice
 
@@ -35,11 +33,7 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      - ./docker/grafana/datasources.yaml:/etc/grafana/provisioning/datasources/datasources.yaml
-      - ./docker/grafana/dashboards:/etc/grafana/dashboards
-      - ./docker/grafana/dashboard.yaml:/etc/grafana/provisioning/dashboards/dashboard.yaml
-      - ./docker/grafana/grafana.ini:/etc/grafana/grafana.ini
-
+      - ./docker/grafana:/etc/grafana
 
     links:
       - prometheus
