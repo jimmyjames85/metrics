@@ -2,7 +2,11 @@ groups:
   - name: webservice
     interval: 1s
     rules:
-      - record: webservice_error_rate_1m
+      - record: webservice:error_rate:5s
+        expr: 1 - sum(rate(webservice_http_request_duration_seconds_count{code!~"5.*"}[5s])) / sum(rate(webservice_http_request_duration_seconds_count{}[5s]))
+      - record: webservice:error_rate:30s
+        expr: 1 - sum(rate(webservice_http_request_duration_seconds_count{code!~"5.*"}[30s])) / sum(rate(webservice_http_request_duration_seconds_count{}[30s]))
+      - record: webservice:error_rate:1m
         expr: 1 - sum(rate(webservice_http_request_duration_seconds_count{code!~"5.*"}[1m])) / sum(rate(webservice_http_request_duration_seconds_count{}[1m]))
-      - record: webservice_error_rate_5m
+      - record: webservice:error_rate:5m
         expr: 1 - sum(rate(webservice_http_request_duration_seconds_count{code!~"5.*"}[5m])) / sum(rate(webservice_http_request_duration_seconds_count{}[5m]))

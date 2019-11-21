@@ -169,17 +169,17 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "webservice_error_rate_1m",
+          "expr": "webservice:error_rate:1m",
           "legendFormat": "1m",
           "refId": "A"
         },
         {
-          "expr": "webservice_error_rate_5m",
+          "expr": "webservice:error_rate:5m",
           "legendFormat": "5m",
           "refId": "C"
         },
         {
-          "expr": "(webservice_error_rate_1m > 0.05)\nand\n(webservice_error_rate_5m > 0.05)",
+          "expr": "(webservice:error_rate:1m > 0.05)\nand\n(webservice:error_rate:5m > 0.05)",
           "hide": false,
           "legendFormat": "alert",
           "refId": "B"
