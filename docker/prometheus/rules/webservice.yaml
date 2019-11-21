@@ -1,5 +1,5 @@
 groups:
-  - name: recording
+  - name: webservice
     interval: 1s
     rules:
       - record: webservice_error_rate_1m

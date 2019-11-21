@@ -8,5 +8,5 @@ scrape_configs:
     - webservice:5555
 
 rule_files:
-  - "/etc/prometheus/rules/one.yaml"
-#   - /etc/prometheus/rules/*.yml
+  - "/etc/prometheus/rules/*.yaml"
+  - "/etc/prometheus/rules/*.yml"
