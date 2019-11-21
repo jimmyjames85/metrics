@@ -1,0 +1,36 @@
+version: "2"
+
+services:
+
+  webservice:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    command: "supervisord -n"
+    volumes:
+      - ./docker/supervisord.conf:/etc/supervisord.conf
+      - ./:/go/src/github.com/jimmyjames85/metrics
+    ports:
+      - 5555:5555
+    expose:
+      - 5555
+
+  prometheus:
+    image: prom/prometheus
+    ports:
+      - "9090:9090"
+    expose:
+      - "9090"
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+    volumes:
+      - ./docker/prometheus.yml:/etc/prometheus/prometheus.yml
+    links:
+      - webservice
+
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+    links:
+      - prometheus
