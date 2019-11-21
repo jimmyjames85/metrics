@@ -60,6 +60,7 @@ func New(port int) *Server {
 }
 
 func (s *Server) Serve() error {
+	fmt.Printf("Starting webservice on port %d\n", s.port)
 	listener, err := net.Listen("tcp", fmt.Sprintf(":%d", s.port))
 	if err != nil {
 		return err
