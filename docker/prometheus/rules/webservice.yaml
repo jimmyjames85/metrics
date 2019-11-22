@@ -2,11 +2,26 @@ groups:
   - name: webservice
     interval: 1s
     rules:
-      - record: webservice:error_rate:5s
-        expr: 1 - sum(rate(webservice_http_request_duration_seconds_count{code!~"5.*"}[5s])) / sum(rate(webservice_http_request_duration_seconds_count{}[5s]))
-      - record: webservice:error_rate:30s
-        expr: 1 - sum(rate(webservice_http_request_duration_seconds_count{code!~"5.*"}[30s])) / sum(rate(webservice_http_request_duration_seconds_count{}[30s]))
-      - record: webservice:error_rate:1m
-        expr: 1 - sum(rate(webservice_http_request_duration_seconds_count{code!~"5.*"}[1m])) / sum(rate(webservice_http_request_duration_seconds_count{}[1m]))
+
+      # These are factored, i.e. 1 hour = 1 minute
+
       - record: webservice:error_rate:5m
-        expr: 1 - sum(rate(webservice_http_request_duration_seconds_count{code!~"5.*"}[5m])) / sum(rate(webservice_http_request_duration_seconds_count{}[5m]))
+        expr: 1 - sum(rate(webservice_http_request_duration_seconds_count{code!~"5.*"}[5s])) / sum(rate(webservice_http_request_duration_seconds_count{}[5s]))
+
+      - record: webservice:error_rate:30m
+        expr: 1 - sum(rate(webservice_http_request_duration_seconds_count{code!~"5.*"}[30s])) / sum(rate(webservice_http_request_duration_seconds_count{}[30s]))
+
+      - record: webservice:error_rate:1h
+        expr: 1 - sum(rate(webservice_http_request_duration_seconds_count{code!~"5.*"}[1m])) / sum(rate(webservice_http_request_duration_seconds_count{}[1m]))
+
+      - record: webservice:error_rate:2h
+        expr: 1 - sum(rate(webservice_http_request_duration_seconds_count{code!~"5.*"}[2m])) / sum(rate(webservice_http_request_duration_seconds_count{}[2m]))
+
+      - record: webservice:error_rate:6h
+        expr: 1 - sum(rate(webservice_http_request_duration_seconds_count{code!~"5.*"}[6m])) / sum(rate(webservice_http_request_duration_seconds_count{}[6m]))
+
+      - record: webservice:error_rate:24h
+        expr: 1 - sum(rate(webservice_http_request_duration_seconds_count{code!~"5.*"}[24m])) / sum(rate(webservice_http_request_duration_seconds_count{}[24m]))
+
+      - record: webservice:error_rate:72h
+        expr: 1 - sum(rate(webservice_http_request_duration_seconds_count{code!~"5.*"}[72m])) / sum(rate(webservice_http_request_duration_seconds_count{}[72m]))

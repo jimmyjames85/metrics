@@ -5,3 +5,4 @@ datasources:
     type: prometheus
     access: direct
     url: http://localhost:9090
+    timeInterval: 1s
