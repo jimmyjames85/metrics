@@ -3,25 +3,45 @@ groups:
     interval: 1s
     rules:
 
-      # These are factored, i.e. 1 hour = 1 minute
+      # SLO Window 1h - Alert Windows
+      - record: webservice:error_rate:1s
+        expr: 1 - sum(rate(webservice_http_request_duration_seconds_count{code!~"5.*"}[1s])) / sum(rate(webservice_http_request_duration_seconds_count{}[1s]))
 
-      - record: webservice:error_rate:5m
+      - record: webservice:error_rate:5s
         expr: 1 - sum(rate(webservice_http_request_duration_seconds_count{code!~"5.*"}[5s])) / sum(rate(webservice_http_request_duration_seconds_count{}[5s]))
 
-      - record: webservice:error_rate:30m
+      - record: webservice:error_rate:10s
+        expr: 1 - sum(rate(webservice_http_request_duration_seconds_count{code!~"5.*"}[10s])) / sum(rate(webservice_http_request_duration_seconds_count{}[10s]))
+
+      - record: webservice:error_rate:30s
         expr: 1 - sum(rate(webservice_http_request_duration_seconds_count{code!~"5.*"}[30s])) / sum(rate(webservice_http_request_duration_seconds_count{}[30s]))
 
-      - record: webservice:error_rate:1h
-        expr: 1 - sum(rate(webservice_http_request_duration_seconds_count{code!~"5.*"}[1m])) / sum(rate(webservice_http_request_duration_seconds_count{}[1m]))
-
-      - record: webservice:error_rate:2h
+      - record: webservice:error_rate:2m
         expr: 1 - sum(rate(webservice_http_request_duration_seconds_count{code!~"5.*"}[2m])) / sum(rate(webservice_http_request_duration_seconds_count{}[2m]))
 
-      - record: webservice:error_rate:6h
+      - record: webservice:error_rate:6m
         expr: 1 - sum(rate(webservice_http_request_duration_seconds_count{code!~"5.*"}[6m])) / sum(rate(webservice_http_request_duration_seconds_count{}[6m]))
 
-      - record: webservice:error_rate:24h
-        expr: 1 - sum(rate(webservice_http_request_duration_seconds_count{code!~"5.*"}[24m])) / sum(rate(webservice_http_request_duration_seconds_count{}[24m]))
+      # SLO Window 1h
+      - record: webservice:error_rate:1h
+        expr: 1 - sum(rate(webservice_http_request_duration_seconds_count{code!~"5.*"}[1h])) / sum(rate(webservice_http_request_duration_seconds_count{}[1h]))
 
-      - record: webservice:error_rate:72h
+
+      ######################################################################
+      # These are scaled, i.e. 1 hour = 1 minute
+      - record: webservice:scaled_error_rate:5m
+        expr: 1 - sum(rate(webservice_http_request_duration_seconds_count{code!~"5.*"}[5s])) / sum(rate(webservice_http_request_duration_seconds_count{}[5s]))
+      - record: webservice:scaled_error_rate:30m
+        expr: 1 - sum(rate(webservice_http_request_duration_seconds_count{code!~"5.*"}[30s])) / sum(rate(webservice_http_request_duration_seconds_count{}[30s]))
+      - record: webservice:scaled_error_rate:1h
+        expr: 1 - sum(rate(webservice_http_request_duration_seconds_count{code!~"5.*"}[1m])) / sum(rate(webservice_http_request_duration_seconds_count{}[1m]))
+      - record: webservice:scaled_error_rate:2h
+        expr: 1 - sum(rate(webservice_http_request_duration_seconds_count{code!~"5.*"}[2m])) / sum(rate(webservice_http_request_duration_seconds_count{}[2m]))
+      - record: webservice:scaled_error_rate:6h
+        expr: 1 - sum(rate(webservice_http_request_duration_seconds_count{code!~"5.*"}[6m])) / sum(rate(webservice_http_request_duration_seconds_count{}[6m]))
+      - record: webservice:scaled_error_rate:24h
+        expr: 1 - sum(rate(webservice_http_request_duration_seconds_count{code!~"5.*"}[24m])) / sum(rate(webservice_http_request_duration_seconds_count{}[24m]))
+      - record: webservice:scaled_error_rate:72h
         expr: 1 - sum(rate(webservice_http_request_duration_seconds_count{code!~"5.*"}[72m])) / sum(rate(webservice_http_request_duration_seconds_count{}[72m]))
+      #
+      ######################################################################

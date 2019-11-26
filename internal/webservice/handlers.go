@@ -29,7 +29,7 @@ func (s *Server) codeHandler(code int) http.HandlerFunc {
 		}
 		w.WriteHeader(code)
 		fmt.Fprintf(w, "%d\n", code)
-		fmt.Printf("%d\n", code)
+		// fmt.Printf("%d\n", code)
 	}
 }
 
