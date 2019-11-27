@@ -1,0 +1,44 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: {{ template "webservice.fullname" . }}
+  labels:
+    app: {{ template "webservice.name" . }}
+    chart: {{ template "webservice.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ template "webservice.name" . }}
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "webservice.name" . }}
+        release: {{ .Release.Name }}
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/path: "/metrics"
+        prometheus.io/port: "{{ .Values.env.WEBSERVICE_PORT }}"
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.env.WEBSERVICE_PORT }}
+              protocol: TCP
+          env:
+{{ include "webservice.env" . | indent 12 }}
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
+
+        - name: {{ .Chart.Name }}-webclient
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command: ["/bin/bash", "-c", "while true; do ./webclient http://{{ .Release.Name }}:{{ .Values.env.WEBSERVICE_PORT }}/200 -c 100 -t 1h; done"]
+          resources:
+{{ toYaml .Values.resources | indent 12 }}

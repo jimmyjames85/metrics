@@ -5,7 +5,7 @@ services:
   webservice:
     build:
       context: .
-      dockerfile: docker/Dockerfile
+      dockerfile: docker/dev.Dockerfile
     command: "supervisord -n"
     volumes:
       - ./docker/supervisord.conf:/etc/supervisord.conf

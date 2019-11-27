@@ -1,0 +1,13 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ template "webservice.fullname" . }}
+spec:
+  endpoints:
+  - interval: "10s"
+    path: "/metrics"
+    port: http
+  selector:
+    matchLabels:
+      app: {{ template "webservice.name" . }}
+      release: {{ .Release.Name }}

@@ -70,7 +70,33 @@ var opts struct {
 	method      string // GET, POST, PUT, etc
 }
 
-func parseOpts() error {
+func usage(code int) {
+	fmt.Printf(`Makes and executes an http request repeatedly against a URL.
+
+Usage:
+  %s [flags] URL
+
+Flags:
+
+        -t, --time <duration>   How long to repeat the test for. Valid
+				time units are "ns", "us" (or "µs"),
+				"ms", "s", "m", "h".
+
+        -c, --concurrency	How many concurrent requests to make (default 1)
+        -X, --request		Specifies the request method to use (default GET)
+
+        -h, --help              Displays this message
+
+        -v, --verbose		Displays the http requests being in curl
+				format. If concurrency is greater than
+				one, only displays the curl for the
+				first worker.
+`, os.Args[0])
+
+	os.Exit(code)
+}
+
+func mustParseOpts() error {
 
 	// defaults
 	opts.concurrency = 1
@@ -78,46 +104,56 @@ func parseOpts() error {
 
 	args := os.Args[1:]
 	if len(args) == 0 {
-		fmt.Printf("missing argument: URL\n")
+		fmt.Printf("missing argument: URL\n\n")
+		usage(-1)
 	}
 
 	for i := 0; i < len(args); i++ {
 		switch args[i] {
+		case "-h", "--help":
+			usage(0)
 		case "-v", "--verbose":
 			opts.verbose = true
 		case "-c", "--concurrency":
 			i++
 			if i >= len(args) {
-				return fmt.Errorf("missing concurrency argument")
+				fmt.Fprintf(os.Stderr, "missing concurrency argument\n\n")
+				usage(-1)
 			}
 			c, err := strconv.Atoi(args[i])
 			if err != nil {
-				return fmt.Errorf("invalid concurrency argument: %s", err.Error())
+				fmt.Fprintf(os.Stderr, "invalid concurrency argument: %s\n\n", err.Error())
+				usage(-1)
 			}
 			if c <= 0 {
-				return fmt.Errorf("invalid concurrency argument: %d", c)
+				fmt.Fprintf(os.Stderr, "invalid concurrency argument: %d\n\n", c)
+				usage(-1)
 			}
 			opts.concurrency = c
 		case "-t", "--time":
 			i++
 			if i >= len(args) {
-				return fmt.Errorf("missing reps argument")
+				fmt.Fprintf(os.Stderr, "missing reps argument\n\n")
+				usage(-1)
 			}
 			d, err := time.ParseDuration(args[i])
 			if err != nil {
-				return fmt.Errorf("invalid time argument: %s", err.Error())
+				fmt.Fprintf(os.Stderr, "invalid time argument: %s\n\n", err.Error())
+				usage(-1)
 			}
 			opts.period = d
 		case "-X", "--request":
 			i++
 			if i >= len(args) {
-				return fmt.Errorf("missing request method argument")
+				fmt.Fprintf(os.Stderr, "missing request method argument\n\n")
+				usage(-1)
 			}
 			opts.method = args[i]
 		default:
 			u, err := url.Parse(args[i])
 			if err != nil {
-				return fmt.Errorf("invalid url: %s", err.Error())
+				fmt.Fprintf(os.Stderr, "invalid url: %s\n\n", err.Error())
+				usage(-1)
 			}
 			opts.url = u
 		}
@@ -126,19 +162,13 @@ func parseOpts() error {
 }
 
 func main() {
-
-	err := parseOpts()
-	if err != nil {
-		// TODO: Usage
-		fmt.Printf("%s\n", err.Error())
-		os.Exit(255)
-	}
+	mustParseOpts()
 
 	// make http.Request
 	req, err := http.NewRequest(opts.method, opts.url.String(), nil)
 	if err != nil {
 		fmt.Printf("failed to generate request: %s\n", err.Error())
-		os.Exit(255)
+		os.Exit(-1)
 	}
 
 	wg := &sync.WaitGroup{}
